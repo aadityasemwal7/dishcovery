@@ -22,6 +22,7 @@ Users can input available ingredients to find recipes they can cook.
 Clean and responsive design with intuitive navigation.
 
 Tech Stack : React, Typescript, Tailwind Css
+
 Api : spoonacular API
 
 
