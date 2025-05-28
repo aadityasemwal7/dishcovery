@@ -1,20 +1,13 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 
-
-const users  =  [
-    {
-        id : 1,
-        email: "test@example.com",
-        password: "pass123", // hashed password for "password123"
-    }
-]
 
 // login user
 exports.loginUser = async (req, res) => {
     const {email, password} = req.body;
-
-    const user = users.find((u) => u.email === email)
+    try{
+    const user = await User.findOne({email})
     if(!user){
         return res.status(400).json({message : "Invalid Credentials"})
     }
@@ -22,21 +15,28 @@ exports.loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch) return res.status(400).json({message: "Invalid email or password!"})
 
-    const token = jwt.sign({id : user.id}, process.env.JWT_SECRET, {expiresIn: "1h"})  
+    const token = jwt.sign({id : user._id}, process.env.JWT_SECRET, {expiresIn: "1h"})  
     
-    res.json({token, user : {id : user.id, email: user.email}})
+    res.json({token, user : {id : user._id, username: user.username, email: user.email}})
+    }
+    catch(err){
+        console.error(err)
+        res.status(500).json({message: "server error"})
+    }
 }
 
 exports.registerUser = async (req, res) => {
-    const {email, password} = req.body
+    const { username, email, password } = req.body;
+    try {
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(400).json({ message: 'User already exists! Please login!' });
 
-    const userExists = users.find(u => u.email === email)
-    if(userExists) return res.status(400).json({message: "user already exists! Please login!"})
-     
-    const hashedPassword = await bcrypt.hash(password, 10)  
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, email, password: hashedPassword });
+        await newUser.save();
 
-    const newUser = {id: users.length + 1, email: email, password: hashedPassword}
-    users.push(newUser)
-
-    res.status(201).json({message: "users registered successfully!"})
-}
+        res.status(201).json({ message: 'User registered successfully!' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};

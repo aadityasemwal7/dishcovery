@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
     user: any;
@@ -10,6 +10,19 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<{ children : React.ReactNode }> = ({children}) => {
     const [user, setUser] = useState<any>(null)
+    const [userActive, setUserActive]  = useState<boolean>(true)
+    console.log(user)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user")
+        if(storedUser){
+            setUser(JSON.parse(storedUser))
+            
+        }
+        setUserActive(false)
+    }, [])
+
+
 
     const login = (userData: any) => {
         setUser(userData)
@@ -19,11 +32,12 @@ export const AuthProvider: React.FC<{ children : React.ReactNode }> = ({children
     const logout = () => {
         setUser(null)
         localStorage.removeItem("user")
+        localStorage.removeItem("token")
     }
 
     return (
         <AuthContext.Provider value={{user, login, logout}}>
-            {children}
+            {!userActive && children}
         </AuthContext.Provider>
     )
 }

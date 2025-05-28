@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Swal from "sweetalert2"
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -13,11 +14,24 @@ const Login = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const res = await axios.post("https://your-api.com/login", { email, password });
-            login(res.data)
+            const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+            login(res.data.user)
+            localStorage.setItem("token", res.data.token)
+            Swal.fire({
+                icon: "success",
+                title: "Login Successfully!",
+                text: "Welcome back",
+                timer: 2000,
+                showConfirmButton: false,
+            })
             navigate("/")
-        } catch (error) {
-            console.error("Login failed", error)
+        } catch (error : any) {
+            Swal.fire({
+                icon: "error",
+                title: "Login Failed!",
+                text: error.response?.data?.message || "Please check your credentials",
+            })
+            console.error("Login failed", error.response?.data || error.message);
         }
     }
 
