@@ -1,17 +1,22 @@
+import { useEffect } from "react";
 import Logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const {user, logout} = useAuth()
-  console.log(user)
+  
+  useEffect(() => {
+    console.log(user)
+  }, [user])
+
   return (
     <div className="bg-white shadow-md">
       <nav className="container mx-auto px-6 py-4 flex items-center">
         <ul className="flex items-center w-full">
           {/* Logo */}
-          <Link to={"/"}>
-          <li className="mr-auto">
+          <Link to={"/"} className="mr-auto">
+          <li>
             <div>
               <img width={130} src={Logo} alt="Logo" className="cursor-pointer" />
             </div>
