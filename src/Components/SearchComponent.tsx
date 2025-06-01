@@ -1,16 +1,36 @@
-import React, { useEffect } from 'react';
+import React, {useState} from 'react';
 import image from "../assets/women-eating.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const SearchComponent = () => {
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [recipes, setRecipes] = useState([]);
+  const navigate = useNavigate();
+
 
   const fetchRecipes = async(name: string) => {
     const api_key = "0484e81779be44a88126582db219903c"
     
-    const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(name)}&number=10&apiKey=${api_key}`)
-    const data = await res.json()
-
-    console.log(data)
+    try{
+      const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(name)}&number=20&apiKey=${api_key}`)
+      const data = await res.json()
+      const results = data.results || []
+      
+      const detailedRecipes = await Promise.all(
+        results.map(async (recipe: any) => {
+          const detailsRes = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${api_key}`)
+          return await detailsRes.json()
+        })
+      )
+      setRecipes(detailedRecipes)
+      navigate('/searched-recipes', { state: { recipes: detailedRecipes }});
+    }catch(err){
+      console.log(`error message : ${err}`)
+    }
+    
+    
+    
+    
     
   }
   
@@ -33,7 +53,7 @@ const SearchComponent = () => {
           <button
             onClick={() => fetchRecipes(inputValue)} className="bg-green-500 text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 transition"
           >
-            Search
+        	Search	
           </button>
         </div>
       </div>

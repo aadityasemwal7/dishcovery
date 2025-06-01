@@ -8,6 +8,7 @@ import RecipeDetails from './Components/RecipeDetails'
 import ProtectedRoutes from './Components/ProtectedRoutes'
 import Login from './Components/Login'
 import Register from './Components/Register'
+import SearchedRecipes from './Components/SearchedRecipes'
 
 function App() {
   const [randomRecipes, setRandomRecipes] = useState([])
@@ -53,9 +54,14 @@ function App() {
         </ProtectedRoutes>
        
        }>
-
        </Route>
-      
+      <Route path="/searched-recipes" element={
+        <ProtectedRoutes>
+          <SearchedRecipes />
+        </ProtectedRoutes>
+      }/>
+
+
       </Routes>
       </ConditionalLayout>
     </Router>
