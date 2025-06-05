@@ -1,14 +1,29 @@
-import { useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({fetchRecipes}) => {
   const {user, logout} = useAuth()
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
   
   useEffect(() => {
-    console.log(user)
+    if (user) {
+      console.log(`User logged in: ${user.username}`);
+    } else {
+      console.log("No user logged in");
+    }
   }, [user])
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (search.trim()) {
+      fetchRecipes(search.trim());
+      setSearch("");
+    }
+    
+  }
 
   return (
     <div className="bg-white shadow-md">
@@ -22,10 +37,26 @@ const Header = () => {
             </div>
           </li>
           </Link>
-          {/* Navigation Links */}
-          <li className="mx-4 font-semibold text-gray-700 hover:text-red-600 transition duration-300 cursor-pointer">
-            Popular Recipes
+          {location.pathname === "/" ? <></> : (<div>
+            <li className="flex-1 flex justify-center">
+            <form onSubmit={handleSearch} className="flex">
+              <input
+                type="text"
+                placeholder="Search recipes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-72 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 transition"
+              >
+                Search
+              </button>
+            </form>
           </li>
+          </div>)}
+          
 
           {/* Auth Buttons */}
           {user ? (

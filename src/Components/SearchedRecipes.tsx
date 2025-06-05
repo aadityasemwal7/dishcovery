@@ -53,9 +53,22 @@ const SearchedRecipes = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center group-hover:text-green-600 transition-colors duration-300">
                 {recipe.title}
               </h3>
+          <div className="flex flex-wrap justify-center gap-4 mb-3 text-sm">
+            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
+            Health Score: {recipe.healthScore ?? "N/A"}
+            </span>
+            <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-medium">
+              Servings: {recipe.servings ?? "N/A"}
+            </span>
+            <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
+              Cost: ${recipe.pricePerServing ? recipe.pricePerServing : "N/A"} 
+            </span>
+          </div>
+              <a href={recipe.spoonacularSourceUrl} target="_blank" rel="noopener noreferrer" className="w-full">
               <button className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full font-semibold shadow transition">
                 View Recipe
               </button>
+              </a>
             </div>
           </div>
         ))}
