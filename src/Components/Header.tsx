@@ -14,6 +14,7 @@ const Header = ({fetchRecipes}) => {
     } else {
       console.log("No user logged in");
     }
+    
   }, [user])
 
   const handleSearch = (e: React.FormEvent) => {

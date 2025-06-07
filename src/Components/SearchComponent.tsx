@@ -1,38 +1,33 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import image from "../assets/women-eating.jpg";
-import { useNavigate } from 'react-router-dom';
 
-const SearchComponent = () => {
+
+const SearchComponent = ({fetchRecipes}) => {
   const [inputValue, setInputValue] = useState('');
-  const [recipes, setRecipes] = useState([]);
-  const navigate = useNavigate();
+  // const [recipes, setRecipes] = useState([]);
+  // const navigate = useNavigate();
 
 
-  const fetchRecipes = async(name: string) => {
-    const api_key = "0484e81779be44a88126582db219903c"
+  // const fetchRecipes = async(name: string) => {
+  //   const api_key = "0484e81779be44a88126582db219903c"
     
-    try{
-      const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(name)}&number=20&apiKey=${api_key}`)
-      const data = await res.json()
-      const results = data.results || []
+  //   try{
+  //     const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(name)}&number=20&apiKey=${api_key}`)
+  //     const data = await res.json()
+  //     const results = data.results || []
       
-      const detailedRecipes = await Promise.all(
-        results.map(async (recipe: any) => {
-          const detailsRes = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${api_key}`)
-          return await detailsRes.json()
-        })
-      )
-      setRecipes(detailedRecipes)
-      navigate('/searched-recipes', { state: { recipes: detailedRecipes }});
-    }catch(err){
-      console.log(`error message : ${err}`)
-    }
-    
-    
-    
-    
-    
-  }
+  //     const detailedRecipes = await Promise.all(
+  //       results.map(async (recipe: any) => {
+  //         const detailsRes = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${api_key}`)
+  //         return await detailsRes.json()
+  //       })
+  //     )
+  //     setRecipes(detailedRecipes)
+  //     navigate('/searched-recipes', { state: { recipes: detailedRecipes }});
+  //   }catch(err){
+  //     console.log(`error message : ${err}`)
+  //   }
+  // }
   
   
 
