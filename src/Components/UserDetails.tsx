@@ -20,7 +20,7 @@ const getInitials = (name: string) =>
     : "U";
 
 const UserDetails: React.FC = () => {
-  const { user, login, logout } = useAuth() as {
+  const { user, login } = useAuth() as {
     user: UserType;
     login: (user: UserType) => void;
     logout: () => void;
@@ -52,7 +52,7 @@ const UserDetails: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await axios.put(
+      await axios.put(
         `http://localhost:5000/api/auth/update-password`,
         formValues,
         {

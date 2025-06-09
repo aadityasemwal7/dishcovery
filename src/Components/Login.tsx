@@ -4,12 +4,19 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import Logo from "../assets/logo.png"; // Use your logo path
+import Logo from "../assets/logo.png";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { login } = useAuth();
+interface UserType {
+  username: string;
+  email: string;
+  id?: string;
+}
+
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const auth = useAuth() as { login: (user: UserType) => void };
+  const login = auth?.login;
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -19,7 +26,9 @@ const Login = () => {
         email,
         password,
       });
-      login(res.data.user);
+      if (login) {
+        login(res.data.user);
+      }
       localStorage.setItem("token", res.data.token);
       Swal.fire({
         icon: "success",

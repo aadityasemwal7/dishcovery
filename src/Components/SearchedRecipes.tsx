@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import HeartIcon from "../../assets/heart.png";
 
@@ -29,7 +29,7 @@ const SearchedRecipes = () => {
         Search Results
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-        {recipes.map((recipe) => (
+        {recipes.map((recipe : any) => (
           <div
             key={recipe.id}
             className="relative group bg-white/80 backdrop-blur-lg border border-green-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-2"

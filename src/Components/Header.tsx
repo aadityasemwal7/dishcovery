@@ -15,7 +15,7 @@ interface UserType {
   id?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ fetchRecipes, loading }) => {
+const Header: React.FC<HeaderProps> = ({ fetchRecipes }) => {
   const auth = useAuth() as { user: UserType | null; logout: () => void };
   const user = auth?.user;
   const logout = auth?.logout;
