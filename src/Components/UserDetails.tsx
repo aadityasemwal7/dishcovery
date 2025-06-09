@@ -53,7 +53,7 @@ const UserDetails: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://localhost:5000/api/auth/update-password`,
+        `https://dishcovery-backend-4ggb.onrender.com/api/auth/update-password`,
         formValues,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -80,7 +80,7 @@ const UserDetails: React.FC = () => {
     setLoading(true);
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/auth/update`,
+        `https://dishcovery-backend-4ggb.onrender.com/api/auth/update`,
         { username, email },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors")
 const { registerUser, loginUser } = require("./controllers/authControllers");
 const PORT = process.env.PORT
+const MONGODB_URI = process.env.MONGODB_URI
 const userRoutes = require("./routes/auth")
 
 const app = express()
@@ -12,7 +13,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017/usersDB')
+mongoose.connect(MONGODB_URI)
 .then(() => {
     console.log("MongoDB connected successfully");
 })
