@@ -42,7 +42,7 @@ function AppRoutes() {
       const res = await fetch(
         `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(
           name
-        )}&number=1&apiKey=${api_key}`
+        )}&number=12&apiKey=${api_key}`
       );
       const data = await res.json();
       const results = data.results || [];
@@ -70,7 +70,7 @@ function AppRoutes() {
       try {
         const api_key = "0484e81779be44a88126582db219903c";
         const response = await fetch(
-          `https://api.spoonacular.com/recipes/random?number=6&apiKey=${api_key}`
+          `https://api.spoonacular.com/recipes/random?number=9&apiKey=${api_key}`
         );
         if (!response.ok) {
           console.log("failed to fetch api");

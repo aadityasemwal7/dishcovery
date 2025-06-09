@@ -53,4 +53,21 @@ exports.updateUser = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
     const {currPassword, newPassword} = req.body;
+    try {
+        const user = await User.findById(req.user.id)
+        if(!user){
+            return res.status(404).json({message: "User not found!"})
+        }
+
+        const isMatch = await bcrypt.compare(currPassword, user.password)
+        if(!isMatch){
+            return res.status(404).json({message: "invalid current password!"})
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({message: "Password updated successfully!"})
+    }catch(err) {res.status(500).json({message: `could not update password: ${err}`})}
 }

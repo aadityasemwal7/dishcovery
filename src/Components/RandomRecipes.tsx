@@ -37,7 +37,7 @@ const RandomRecipes: React.FC<RandomRecipesProps> = (props) => {
                   className="w-full h-full rounded-full border-2 border-pink-200 shadow"
                   alt="likes"
                 />
-                <span className="absolute inset-0 flex items-center justify-center text-pink-600 font-bold text-sm pointer-events-none">
+                <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm pointer-events-none">
                   {recipe.aggregateLikes}
                 </span>
               </div>

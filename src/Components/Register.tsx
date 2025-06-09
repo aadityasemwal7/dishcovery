@@ -61,7 +61,7 @@ const Register = () => {
             Join DishCovery and start your flavor journey!
           </p>
         </div>
-        <form onSubmit={handleRegister} className="space-y-6">
+        <form onSubmit={handleRegister} className="space-y-6 text-gray-600">
           <div>
             <input
               type="text"

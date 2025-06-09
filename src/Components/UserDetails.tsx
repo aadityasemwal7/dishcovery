@@ -7,10 +7,10 @@ import { FiEdit2, FiSave, FiX } from "react-icons/fi";
 const getInitials = (name: string) =>
   name
     ? name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
     : "U";
 
 const UserDetails: React.FC = () => {
@@ -19,6 +19,52 @@ const UserDetails: React.FC = () => {
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
+
+  const handleUpdatePassword = async () => {
+    const { value: formValues } = await Swal.fire({
+      title: "Change Password",
+      html:
+        '<input id="swal-curr" type="password" class="swal2-input" placeholder="Current Password">' +
+        '<input id="swal-new" type="password" class="swal2-input" placeholder="New Password">',
+      focusConfirm: false,
+      preConfirm: () => {
+        const curr = (document.getElementById("swal-curr") as HTMLInputElement).value;
+        const newP = (document.getElementById("swal-new") as HTMLInputElement).value;
+        if (!curr || !newP) {
+          Swal.showValidationMessage("Both fields are required");
+          return;
+        }
+        return { currPassword: curr, newPassword: newP };
+      }
+    });
+
+    if (!formValues) return;
+
+    setLoading(true);
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/auth/update-password`,
+        formValues,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      Swal.fire({
+        icon: "success",
+        title: "Password updated!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Update failed",
+        text: "Could not update password.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleSave = async () => {
     setLoading(true);
@@ -146,13 +192,21 @@ const UserDetails: React.FC = () => {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full font-bold shadow hover:from-green-500 hover:to-green-700 transition-all duration-300"
-            >
-              <FiEdit2 className="text-xl" />
-              Edit
-            </button>
+            <>
+              <button
+                onClick={() => setEditMode(true)}
+                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full font-bold shadow hover:from-green-500 hover:to-green-700 transition-all duration-300"
+              >
+                <FiEdit2 className="text-xl" />
+                Edit
+              </button>
+              <button
+                onClick={handleUpdatePassword}
+                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-full font-bold shadow hover:from-yellow-500 hover:to-yellow-700 transition-all duration-300"
+              >
+                Change Password
+              </button>
+            </>
           )}
         </div>
       </div>
