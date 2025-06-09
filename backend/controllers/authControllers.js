@@ -40,3 +40,17 @@ exports.registerUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.updateUser = async (req, res) => {
+    try {
+        const {username, email} = req.body
+        const user = await User.findByIdAndUpdate(req.user.id, {username, email}, {new: true})
+        res.json({user: {id: user._id, username: user.username, email: user.email}})
+    }catch(err){
+        res.status(500).json({message: "could not update user"})
+    }
+}
+
+exports.updatePassword = async (req, res) => {
+    const {currPassword, newPassword} = req.body;
+}

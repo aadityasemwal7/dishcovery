@@ -1,21 +1,28 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 
-const Header = ({fetchRecipes}) => {
-  const {user, logout} = useAuth()
+const Header = ({ fetchRecipes }) => {
+  const { user, logout } = useAuth();
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   useEffect(() => {
     if (user) {
       console.log(`User logged in: ${user.username}`);
     } else {
       console.log("No user logged in");
     }
-    
-  }, [user])
+  }, [user]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    console.log("user logged out!")
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,66 +30,79 @@ const Header = ({fetchRecipes}) => {
       fetchRecipes(search.trim());
       setSearch("");
     }
-    
-  }
+  };
 
   return (
-    <div className="bg-white shadow-md">
-      <nav className="container mx-auto px-6 py-4 flex items-center">
-        <ul className="flex items-center w-full">
-          {/* Logo */}
-          <Link to={"/"} className="mr-auto">
-          <li>
-            <div>
-              <img width={130} src={Logo} alt="Logo" className="cursor-pointer" />
-            </div>
-          </li>
-          </Link>
-          {location.pathname === "/" ? <></> : (<div>
-            <li className="flex-1 flex justify-center">
-            <form onSubmit={handleSearch} className="flex">
-              <input
-                type="text"
-                placeholder="Search recipes..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-72 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 transition"
-              >
-                Search
-              </button>
-            </form>
-          </li>
-          </div>)}
-          
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-lg">
+      <nav className="container mx-auto px-6 py-3 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            width={120}
+            src={Logo}
+            alt="Logo"
+            className="cursor-pointer drop-shadow-md"
+          />
+        </Link>
 
-          {/* Auth Buttons */}
+        {/* Search Bar */}
+        {location.pathname !== "/" && (
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center bg-white/90 rounded-full shadow-md border border-green-200 px-2 py-1 mx-6 w-80 max-w-full"
+          >
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-grow px-4 py-2 bg-transparent outline-none text-gray-700 rounded-l-full"
+            />
+            <button
+              type="submit"
+              className="flex items-center justify-center bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full px-4 py-2 ml-2 hover:from-green-500 hover:to-green-700 transition"
+            >
+              <FiSearch className="text-xl" />
+            </button>
+          </form>
+        )}
+
+        {/* Auth Buttons */}
+        <div className="flex items-center gap-3 ml-auto">
           {user ? (
-            <li className="ml-auto cursor-pointer">
-            <button onClick={logout} className="cursor-pointer px-6 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-600 hover:text-white transition duration-300">
-              Logout
-            </button>
-          </li>
+            <>
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 border border-red-500 text-red-600 rounded-full font-medium hover:bg-red-600 hover:text-white transition duration-300 shadow"
+              >
+                Logout
+              </button>
+              <div className="flex items-center bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold shadow">
+                <Link to="/user-details">
+                  <span className="mr-2">Hello,</span>
+                  {user.username}
+                </Link>
+              </div>
+            </>
           ) : (
-            <li className="ml-auto cursor-pointer">
-            <button className="px-6 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-600 hover:text-white transition duration-300">
-              Login
-            </button>
-          </li>
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="px-5 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-600 hover:text-white transition duration-300 shadow"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full font-medium hover:from-green-500 hover:to-green-700 transition duration-300 shadow"
+              >
+                Sign Up
+              </button>
+            </>
           )}
-          <li className="ml-3">
-            <button className="cursor-pointer px-6 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition duration-300">
-              {
-                user ? `hello, ${user.username}` : "Sign Up"
-              }
-            </button>
-          </li>
-        </ul>
+        </div>
       </nav>
-    </div>
+    </header>
   );
 };
 

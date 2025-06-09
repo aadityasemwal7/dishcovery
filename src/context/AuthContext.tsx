@@ -11,6 +11,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export const AuthProvider: React.FC<{ children : React.ReactNode }> = ({children}) => {
     const [user, setUser] = useState<any>(null)
     const [userActive, setUserActive]  = useState<boolean>(true)
+    
     console.log(user)
 
     useEffect(() => {
@@ -33,6 +34,7 @@ export const AuthProvider: React.FC<{ children : React.ReactNode }> = ({children
         setUser(null)
         localStorage.removeItem("user")
         localStorage.removeItem("token")
+        
     }
 
     return (
