@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import image from "../assets/women-eating.jpg";
 
-const SearchComponent = ({ fetchRecipes }) => {
+interface SearchComponentProps {
+  fetchRecipes: (name: string) => void;
+  loading?: boolean;
+}
+
+const SearchComponent: React.FC<SearchComponentProps> = ({ fetchRecipes }) => {
   const [inputValue, setInputValue] = useState('');
 
   return (

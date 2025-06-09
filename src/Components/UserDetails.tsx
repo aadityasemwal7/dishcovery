@@ -4,6 +4,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FiEdit2, FiSave, FiX } from "react-icons/fi";
 
+interface UserType {
+  username: string;
+  email: string;
+  id?: string;
+}
+
 const getInitials = (name: string) =>
   name
     ? name
@@ -14,7 +20,11 @@ const getInitials = (name: string) =>
     : "U";
 
 const UserDetails: React.FC = () => {
-  const { user, login, logout } = useAuth();
+  const { user, login, logout } = useAuth() as {
+    user: UserType;
+    login: (user: UserType) => void;
+    logout: () => void;
+  };
   const [editMode, setEditMode] = useState(false);
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");

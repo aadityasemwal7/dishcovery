@@ -16,7 +16,19 @@ import ProtectedRoutes from "./Components/ProtectedRoutes";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import SearchedRecipes from "./Components/SearchedRecipes";
-import UserDetails from  "./Components/userDetails";
+import UserDetails from  "./Components/UserDetails";
+
+interface RecipeType {
+  id: number;
+  title: string;
+  image: string;
+  summary: string;
+  aggregateLikes: number;
+  healthScore: number | null;
+  servings: number | null;
+  pricePerServing: number | null;
+  spoonacularSourceUrl: string;
+}
 
 function App() {
   return (
@@ -27,7 +39,7 @@ function App() {
 }
 
 function AppRoutes() {
-  const [randomRecipes, setRandomRecipes] = useState([]);
+  const [randomRecipes, setRandomRecipes] = useState<RecipeType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchingFor, setSearchingFor] = useState<string>("");
 
@@ -95,7 +107,14 @@ function AppRoutes() {
   );
 }
 
-const ConditionalLayout = ({
+interface ConditionalLayoutProps {
+  fetchRecipes: (name: string) => void;
+  randomRecipes: RecipeType[];
+  loading: boolean;
+  searchingFor: string;
+}
+
+const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
   fetchRecipes,
   randomRecipes,
   loading,

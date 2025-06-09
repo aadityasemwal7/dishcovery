@@ -4,8 +4,21 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 
-const Header = ({ fetchRecipes }) => {
-  const { user, logout } = useAuth();
+interface HeaderProps {
+  fetchRecipes: (name: string) => void;
+  loading?: boolean;
+}
+
+interface UserType {
+  username: string;
+  email: string;
+  id?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ fetchRecipes, loading }) => {
+  const auth = useAuth() as { user: UserType | null; logout: () => void };
+  const user = auth?.user;
+  const logout = auth?.logout;
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,10 +32,10 @@ const Header = ({ fetchRecipes }) => {
   }, [user]);
 
   const handleLogout = () => {
-    logout();
+    if (logout) logout();
     navigate("/");
-    console.log("user logged out!")
-  }
+    console.log("user logged out!");
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
