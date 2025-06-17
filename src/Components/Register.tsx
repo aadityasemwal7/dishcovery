@@ -20,7 +20,7 @@ const Register = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("https://dishcovery-backend-4ggb.onrender.com/api/auth/register", {
         username,
         email,
         password,
