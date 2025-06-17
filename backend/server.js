@@ -1,30 +1,26 @@
-require("dotenv").config(); 
+require("dotenv").config();
 const express = require('express');
-const authRoutes = require("./routes/auth")
 const mongoose = require("mongoose");
-const cors = require("cors")
-const { registerUser, loginUser } = require("./controllers/authControllers");
-const PORT = process.env.PORT
-const MONGODB_URI = process.env.MONGODB_URI
-const userRoutes = require("./routes/auth")
+const cors = require("cors");
+const authRoutes = require("./routes/auth");
 
-const app = express()
+const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGODB_URI;
 
-app.use(cors())
-app.use(express.json())
+const app = express();
+
+app.use(cors({ origin: "https://dish-covery-delta.vercel.app" }));
+app.use(express.json());
 
 mongoose.connect(MONGODB_URI)
-.then(() => {
+  .then(() => {
     console.log("MongoDB connected successfully");
-})
-.catch(err => console.log("MongoDB connection failed", err));
+  })
+  .catch(err => console.log("MongoDB connection failed", err));
 
+// Use only the router, not individual routes
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-
-app.post("/api/auth/register", registerUser);
-app.post("/api/auth/login", loginUser);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+  console.log(`Server is running on port ${PORT}`);
+});
