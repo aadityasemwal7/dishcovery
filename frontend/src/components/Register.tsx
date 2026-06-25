@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useAuth } from "../context/AuthContext";
 import Logo from "../assets/logo.png"; // Use your logo path
+
+const API_URL = import.meta.env.VITE_API_URL || "https://dishcovery-backend-4ggb.onrender.com";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +23,7 @@ const Register = () => {
       return;
     }
     try {
-      await axios.post("https://dishcovery-backend-4ggb.onrender.com/api/auth/register", {
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
         username,
         email,
         password,

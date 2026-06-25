@@ -5,15 +5,16 @@ const User = require("../models/userModel");
 
 // login user
 exports.loginUser = async (req, res) => {
-    const {email, password} = req.body;
+    const {username, email, password} = req.body;
     try{
-    const user = await User.findOne({email})
-    if(!user){
-        return res.status(400).json({message : "Invalid Credentials"})
-    }
+        const identifier = username || email;
+        const user = await User.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+        if(!user){
+            return res.status(400).json({message : "Invalid Credentials"})
+        }
 
     const isMatch = await bcrypt.compare(password, user.password)
-    if(!isMatch) return res.status(400).json({message: "Invalid email or password!"})
+    if(!isMatch) return res.status(400).json({message: "Invalid Credentials"})
 
     const token = jwt.sign({id : user._id}, process.env.JWT_SECRET, {expiresIn: "1h"})  
     

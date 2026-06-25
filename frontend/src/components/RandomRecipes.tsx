@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import HeartIcon from "../../assets/heart.png";
 
 interface Recipe {
@@ -13,18 +13,47 @@ interface Recipe {
   spoonacularSourceUrl: string;
 }
 
-interface RandomRecipesProps {
-  randomRecipes: Recipe[];
-}
+const RandomRecipes: React.FC = () => {
+  const [randomRecipes, setRandomRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const RandomRecipes: React.FC<RandomRecipesProps> = (props) => {
+  useEffect(() => {
+    const fetchRandomRecipes = async () => {
+      try {
+        const api_key = import.meta.env.VITE_SPOONACULAR_API_KEY;
+        const response = await fetch(
+          `https://api.spoonacular.com/recipes/random?number=9&apiKey=${api_key}`
+        );
+        if (!response.ok) {
+          console.log("failed to fetch api");
+        }
+        const res = await response.json();
+        setRandomRecipes(res.recipes || []);
+      } catch (err) {
+        console.log(`error message : ${err}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRandomRecipes();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 py-8">
       <h1 className="text-3xl md:text-4xl font-extrabold text-green-700 mb-10 text-center drop-shadow-lg tracking-tight">
         Recipes You Might Like
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-4">
-        {props.randomRecipes.map((recipe) => (
+        {randomRecipes.map((recipe) => (
           <div
             key={recipe.id}
             className="relative group bg-white/70 backdrop-blur-lg border border-green-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-2"

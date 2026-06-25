@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Logo from "../assets/logo.png";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://dishcovery-backend-4ggb.onrender.com";
+
 interface UserType {
   username: string;
   email: string;
@@ -22,7 +24,7 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://dishcovery-backend-4ggb.onrender.com/api/auth/login", {
+      const res = await axios.post(`${API_URL}/api/auth/login`, {
         email,
         password,
       });

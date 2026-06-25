@@ -85,6 +85,12 @@ const Header: React.FC<HeaderProps> = ({ fetchRecipes }) => {
           {user ? (
             <>
               <button
+                onClick={() => navigate("/cook-with-ingredients")}
+                className="px-5 py-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full font-medium hover:from-amber-500 hover:to-orange-600 transition duration-300 shadow"
+              >
+                🍳 What Can I Cook?
+              </button>
+              <button
                 onClick={handleLogout}
                 className="px-5 py-2 border border-red-500 text-red-600 rounded-full font-medium hover:bg-red-600 hover:text-white transition duration-300 shadow"
               >

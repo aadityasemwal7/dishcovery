@@ -1,9 +1,9 @@
 // App.tsx
 import "./App.css";
 import { useEffect, useState } from "react";
-import Header from "./Components/Header";
-import SearchComponent from "./Components/SearchComponent";
-import RandomRecipes from "./Components/RandomRecipes";
+import Header from "./components/Header";
+import SearchComponent from "./components/SearchComponent";
+import RandomRecipes from "./components/RandomRecipes";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,24 +11,15 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import RecipeDetails from "./Components/RecipeDetails";
-import ProtectedRoutes from "./Components/ProtectedRoutes";
-import Login from "./Components/Login";
-import Register from "./Components/Register";
-import SearchedRecipes from "./Components/SearchedRecipes";
-import UserDetails from  "./Components/UserDetails";
+import RecipeDetails from "./components/RecipeDetails";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import SearchedRecipes from "./components/SearchedRecipes";
+import UserDetails from  "./components/UserDetails";
+import CookWithIngredients from "./components/CookWithIngredients";
 
-interface RecipeType {
-  id: number;
-  title: string;
-  image: string;
-  summary: string;
-  aggregateLikes: number;
-  healthScore: number | null;
-  servings: number | null;
-  pricePerServing: number | null;
-  spoonacularSourceUrl: string;
-}
+
 
 function App() {
   return (
@@ -39,14 +30,13 @@ function App() {
 }
 
 function AppRoutes() {
-  const [randomRecipes, setRandomRecipes] = useState<RecipeType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchingFor, setSearchingFor] = useState<string>("");
 
   const navigate = useNavigate();
 
   const fetchRecipes = async (name: string) => {
-    const api_key = "0484e81779be44a88126582db219903c";
+    const api_key = import.meta.env.VITE_SPOONACULAR_API_KEY;
     try {
       setSearchingFor(name);
       setLoading(true);
@@ -77,31 +67,10 @@ function AppRoutes() {
     }
   };
 
-  useEffect(() => {
-    const fetchRandomRecipes = async () => {
-      try {
-        const api_key = "0484e81779be44a88126582db219903c";
-        const response = await fetch(
-          `https://api.spoonacular.com/recipes/random?number=9&apiKey=${api_key}`
-        );
-        if (!response.ok) {
-          console.log("failed to fetch api");
-        }
-        const res = await response.json();
-        setRandomRecipes(res.recipes || []);
-      } catch (err) {
-        console.log(`error message : ${err}`);
-      }
-    };
-
-    fetchRandomRecipes();
-  }, []);
-
   return (
     <ConditionalLayout
       loading={loading}
       fetchRecipes={fetchRecipes}
-      randomRecipes={randomRecipes}
       searchingFor={searchingFor}
     />
   );
@@ -109,14 +78,12 @@ function AppRoutes() {
 
 interface ConditionalLayoutProps {
   fetchRecipes: (name: string) => void;
-  randomRecipes: RecipeType[];
   loading: boolean;
   searchingFor: string;
 }
 
 const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
   fetchRecipes,
-  randomRecipes,
   loading,
   searchingFor
 }) => {
@@ -138,7 +105,7 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
           path="/"
           element={
             <ProtectedRoutes>
-              <RandomRecipes randomRecipes={randomRecipes} />
+              <RandomRecipes />
             </ProtectedRoutes>
           }
         />
@@ -158,6 +125,14 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
           element={
             <ProtectedRoutes>
               <SearchedRecipes />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/cook-with-ingredients"
+          element={
+            <ProtectedRoutes>
+              <CookWithIngredients fetchRecipes={fetchRecipes} />
             </ProtectedRoutes>
           }
         />

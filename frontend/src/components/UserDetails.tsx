@@ -4,6 +4,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FiEdit2, FiSave, FiX } from "react-icons/fi";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://dishcovery-backend-4ggb.onrender.com";
+
 interface UserType {
   username: string;
   email: string;
@@ -53,7 +55,7 @@ const UserDetails: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `https://dishcovery-backend-4ggb.onrender.com/api/auth/update-password`,
+        `${API_URL}/api/auth/update-password`,
         formValues,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -80,7 +82,7 @@ const UserDetails: React.FC = () => {
     setLoading(true);
     try {
       const res = await axios.put(
-        `https://dishcovery-backend-4ggb.onrender.com/api/auth/update`,
+        `${API_URL}/api/auth/update`,
         { username, email },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
