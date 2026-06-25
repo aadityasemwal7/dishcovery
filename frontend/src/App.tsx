@@ -1,6 +1,6 @@
 // App.tsx
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import SearchComponent from "./components/SearchComponent";
 import RandomRecipes from "./components/RandomRecipes";
