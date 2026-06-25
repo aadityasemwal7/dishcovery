@@ -87,8 +87,8 @@ const Login: React.FC = () => {
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <input
-              type="email"
-              placeholder="Email"
+              type="text"
+              placeholder="Email or Username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border text-gray-600 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/70 shadow-sm transition placeholder-gray-400 text-lg"

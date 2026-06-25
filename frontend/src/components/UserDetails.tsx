@@ -22,7 +22,7 @@ const getInitials = (name: string) =>
     : "U";
 
 const UserDetails: React.FC = () => {
-  const { user, login } = useAuth() as {
+  const { user, login, logout } = useAuth() as {
     user: UserType;
     login: (user: UserType) => void;
     logout: () => void;
@@ -67,7 +67,11 @@ const UserDetails: React.FC = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (err) {
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        logout();
+        return;
+      }
       Swal.fire({
         icon: "error",
         title: "Update failed",
@@ -97,6 +101,10 @@ const UserDetails: React.FC = () => {
       });
       setEditMode(false);
     } catch (err: any) {
+      if (err.response?.status === 401) {
+        logout();
+        return;
+      }
       Swal.fire({
         icon: "error",
         title: "Update failed",

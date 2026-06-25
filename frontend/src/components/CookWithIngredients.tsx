@@ -3,6 +3,7 @@ import IngredientInput from "./IngredientInput";
 import DishSuggestions from "./DishSuggestions";
 import { GiCookingPot } from "react-icons/gi";
 import { FiAlertTriangle, FiWifiOff, FiRefreshCw } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://dishcovery-backend-4ggb.onrender.com";
 
@@ -20,6 +21,7 @@ interface CookWithIngredientsProps {
 const CookWithIngredients: React.FC<CookWithIngredientsProps> = ({
   fetchRecipes,
 }) => {
+  const { logout } = useAuth() as { logout: () => void };
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -77,6 +79,10 @@ const CookWithIngredients: React.FC<CookWithIngredientsProps> = ({
       );
 
       if (!res.ok) {
+        if (res.status === 401) {
+          logout();
+          return;
+        }
         const data = await res.json().catch(() => ({}));
         const message =
           data.message || `Server error (${res.status}). Please try again.`;
