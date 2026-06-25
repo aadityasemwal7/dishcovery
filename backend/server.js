@@ -10,7 +10,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 
-const allowedOrigins = ["https://dish-covery-delta.vercel.app", "http://localhost:5173"];
+const allowedOrigins = ["https://dish-covery-delta.vercel.app", "http://localhost:5173", "https://dishcovery-jqimfl0pb-aadityas-projects-205f54df.vercel.app"];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
