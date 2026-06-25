@@ -10,15 +10,18 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 
-const allowedOrigins = ["https://dish-covery-delta.vercel.app", "http://localhost:5173", "https://dishcovery-jqimfl0pb-aadityas-projects-205f54df.vercel.app", "https://dishcovery-rust.vercel.app", "https://dishcovery-git-main-aadityas-projects-205f54df.vercel.app"];
+const allowedOrigins = ["https://dish-covery-delta.vercel.app", "http://localhost:5173", "https://dishcovery-rust.vercel.app"];
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow any Vercel preview URL for this project
+    if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      return callback(null, true);
     }
-  }
+    callback(null, false);
+  },
+  credentials: true
 }));
 app.use(express.json());
 
