@@ -17,12 +17,14 @@ interface UserType {
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const auth = useAuth() as { login: (user: UserType) => void };
   const login = auth?.login;
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axios.post(`${API_URL}/api/auth/login`, {
         email,
@@ -47,11 +49,22 @@ const Login: React.FC = () => {
         text: error.response?.data?.message || "Please check your credentials",
       });
       console.error("Login failed", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-400 via-white to-blue-100 relative overflow-hidden">
+      {/* Fullscreen loader overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-14 h-14 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            <span className="text-white text-lg font-semibold tracking-wide animate-pulse">Signing you in...</span>
+          </div>
+        </div>
+      )}
       {/* Decorative background pattern */}
       <div className="absolute inset-0 pointer-events-none opacity-10 z-0">
         <svg width="100%" height="100%">
@@ -116,9 +129,13 @@ const Login: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 text-lg tracking-wide"
+            disabled={loading}
+            className={`w-full py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 text-lg tracking-wide flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            Login
+            {loading && (
+              <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            )}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>

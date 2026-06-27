@@ -12,6 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -21,6 +22,7 @@ const Register = () => {
       setError("Passwords do not match");
       return;
     }
+    setLoading(true);
     try {
       await axios.post(`${API_URL}/api/auth/register`, {
         username,
@@ -37,11 +39,22 @@ const Register = () => {
       navigate("/login");
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-300 via-white to-blue-100 relative overflow-hidden">
+      {/* Fullscreen loader overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-14 h-14 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            <span className="text-white text-lg font-semibold tracking-wide animate-pulse">Creating your account...</span>
+          </div>
+        </div>
+      )}
       {/* Decorative background pattern */}
       <div className="absolute inset-0 pointer-events-none opacity-10 z-0">
         <svg width="100%" height="100%">
@@ -111,9 +124,13 @@ const Register = () => {
           )}
           <button
             type="submit"
-            className="w-full py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 text-lg tracking-wide"
+            disabled={loading}
+            className={`w-full py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 text-lg tracking-wide flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            Register
+            {loading && (
+              <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            )}
+            {loading ? 'Registering...' : 'Register'}
           </button>
           <div className="text-center mt-4">
             <span className="text-gray-600">Already have an account? </span>
